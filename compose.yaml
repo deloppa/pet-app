@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      dockerfile: Dockerfile.app
+      context: .
+    container_name: pet_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:8
+    container_name: pet_mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pet_admin
+      MONGO_INITDB_ROOT_PASSWORD: pet_admin_example_password
+    volumes:
+      - pet_mongo_data:/data/db
+
+volumes:
+  pet_mongo_data:
