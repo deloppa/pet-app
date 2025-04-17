@@ -1,8 +1,11 @@
 package com.pet.pet_app.config;
 
+import org.springframework.aop.Advisor;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Role;
+import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +22,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   @Bean
+  @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+  public static Advisor preAuthorizeMethodInterceptor() {
+    return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
+  }
+
+  @Bean
   public static PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
@@ -27,15 +36,7 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
-            req ->
-                req.requestMatchers("index.html")
-                    .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/v1/pets")
-                    .hasRole("USER")
-                    .requestMatchers("/api/v1/pets/**")
-                    .hasRole("ADMIN")
-                    .anyRequest()
-                    .authenticated())
+            req -> req.requestMatchers("index.html").permitAll().anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }
@@ -46,14 +47,14 @@ public class SecurityConfig {
         User.builder()
             .username("super_admin")
             .password(passwordEncoder().encode("super_admin"))
-            .roles("SUPER_ADMIN", "ADMIN", "USER")
+            .roles("SUPER_ADMIN")
             .build();
 
     UserDetails admin =
         User.builder()
             .username("admin")
             .password(passwordEncoder().encode("admin"))
-            .roles("ADMIN", "USER")
+            .roles("ADMIN")
             .build();
 
     UserDetails user =
