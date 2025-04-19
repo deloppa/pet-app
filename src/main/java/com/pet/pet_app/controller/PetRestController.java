@@ -12,35 +12,35 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/pets")
 public class PetRestController {
 
-  @Autowired private PetService petService;
+    @Autowired private PetService petService;
 
-  @GetMapping
-  @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
-  public List<Pet> getAllPets() {
-    return petService.getAllPets();
-  }
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
+    public List<Pet> getAllPets() {
+        return petService.getAllPets();
+    }
 
-  @GetMapping("/{id}")
-  @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
-  public Optional<Pet> getPetById(@PathVariable String id) {
-    return petService.getPetById(id);
-  }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
+    public Optional<Pet> getPetById(@PathVariable String id) {
+        return petService.getPetById(id);
+    }
 
-  @PostMapping
-  @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-  public Pet createPet(@RequestBody Pet pet) {
-    return petService.createPet(pet);
-  }
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public Pet createPet(@RequestBody Pet pet) {
+        return petService.createPet(pet);
+    }
 
-  @PutMapping("/{id}")
-  @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-  public Pet updatePet(@PathVariable String id, @RequestBody Pet pet) {
-    return petService.updatePet(id, pet);
-  }
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public Pet updatePet(@PathVariable String id, @RequestBody Pet pet) {
+        return petService.updatePet(id, pet);
+    }
 
-  @DeleteMapping("/{id}")
-  @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-  public void deletePet(@PathVariable String id) {
-    petService.deletePet(id);
-  }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public void deletePet(@PathVariable String id) {
+        petService.deletePet(id);
+    }
 }

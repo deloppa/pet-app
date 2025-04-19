@@ -7,8 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "pets")
 public class Pet {
-  @Id private String id;
-  private String animal;
-  private String name;
-  private String ownerName;
+
+    @Id private String id;
+    private String animal;
+    private String name;
+    private String ownerName;
 }

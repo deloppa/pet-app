@@ -21,49 +21,50 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Bean
-  @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-  public static Advisor preAuthorizeMethodInterceptor() {
-    return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
-  }
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public static Advisor preAuthorizeMethodInterceptor() {
+        return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
+    }
 
-  @Bean
-  public static PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(
-            req -> req.requestMatchers("index.html").permitAll().anyRequest().authenticated())
-        .httpBasic(Customizer.withDefaults());
-    return http.build();
-  }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(req
+                                   -> req.requestMatchers("index.html")
+                                          .permitAll()
+                                          .anyRequest()
+                                          .authenticated())
+            .httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails superAdmin =
-        User.builder()
-            .username("super_admin")
-            .password(passwordEncoder().encode("super_admin"))
-            .roles("SUPER_ADMIN")
-            .build();
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails superAdmin =
+            User.builder()
+                .username("super_admin")
+                .password(passwordEncoder().encode("super_admin"))
+                .roles("SUPER_ADMIN")
+                .build();
 
-    UserDetails admin =
-        User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("admin"))
-            .roles("ADMIN")
-            .build();
+        UserDetails admin = User.builder()
+                                .username("admin")
+                                .password(passwordEncoder().encode("admin"))
+                                .roles("ADMIN")
+                                .build();
 
-    UserDetails user =
-        User.builder()
-            .username("user")
-            .password(passwordEncoder().encode("user"))
-            .roles("USER")
-            .build();
+        UserDetails user = User.builder()
+                               .username("user")
+                               .password(passwordEncoder().encode("user"))
+                               .roles("USER")
+                               .build();
 
-    return new InMemoryUserDetailsManager(superAdmin, admin, user);
-  }
+        return new InMemoryUserDetailsManager(superAdmin, admin, user);
+    }
 }

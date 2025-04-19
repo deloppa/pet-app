@@ -10,34 +10,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class PetService {
 
-  @Autowired private PetRepository petRepository;
+    @Autowired private PetRepository petRepository;
 
-  public List<Pet> getAllPets() {
-    return petRepository.findAll();
-  }
+    public List<Pet> getAllPets() { return petRepository.findAll(); }
 
-  public Optional<Pet> getPetById(String id) {
-    return petRepository.findById(id);
-  }
+    public Optional<Pet> getPetById(String id) {
+        return petRepository.findById(id);
+    }
 
-  public Pet createPet(Pet pet) {
-    return petRepository.save(pet);
-  }
+    public Pet createPet(Pet pet) { return petRepository.save(pet); }
 
-  public Pet updatePet(String id, Pet updatedPet) {
-    return petRepository
-        .findById(id)
-        .map(
-            pet -> {
-              pet.setAnimal(updatedPet.getAnimal());
-              pet.setName(updatedPet.getName());
-              pet.setOwnerName(updatedPet.getOwnerName());
-              return petRepository.save(pet);
+    public Pet updatePet(String id, Pet updatedPet) {
+        return petRepository.findById(id)
+            .map(pet -> {
+                pet.setAnimal(updatedPet.getAnimal());
+                pet.setName(updatedPet.getName());
+                pet.setOwnerName(updatedPet.getOwnerName());
+                return petRepository.save(pet);
             })
-        .orElse(null);
-  }
+            .orElse(null);
+    }
 
-  public void deletePet(String id) {
-    petRepository.deleteById(id);
-  }
+    public void deletePet(String id) { petRepository.deleteById(id); }
 }
