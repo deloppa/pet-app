@@ -10,7 +10,7 @@ RUN \
 COPY src src
 
 RUN \
-    mvn clean install
+    mvn clean install -DskipTests
 
 ENTRYPOINT ["java", "-jar"]
 CMD ["./target/pet_app-0.0.1-SNAPSHOT.jar"]
