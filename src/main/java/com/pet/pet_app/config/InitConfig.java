@@ -16,15 +16,22 @@ public class InitConfig implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public void initializeUser(String username, String password,
+                               Set<Role> roles) {
+        if (userRepository.findByUsername(username).isEmpty()) {
+            User user = User.builder()
+                            .username(username)
+                            .password(passwordEncoder.encode(password))
+                            .roles(roles)
+                            .build();
+            userRepository.save(user);
+        }
+    }
+
     @Override
     public void run(String... args) {
-        if (userRepository.findByUsername("admin").isEmpty()) {
-            User admin = User.builder()
-                             .username("admin")
-                             .password(passwordEncoder.encode("admin"))
-                             .roles(Set.of(Role.ADMIN))
-                             .build();
-            userRepository.save(admin);
-        }
+        initializeUser("super_admin", "super_admin", Set.of(Role.SUPER_ADMIN));
+        initializeUser("admin", "admin", Set.of(Role.ADMIN));
+        initializeUser("user", "user", Set.of(Role.USER));
     }
 }
